@@ -97,6 +97,7 @@ function totalCost(product) {
     }
 }
 
+
 function displayCart() {
   
     let cartItems = localStorage.getItem("productsInCart");
@@ -114,7 +115,7 @@ function displayCart() {
     if( cartItems && productContainer){
         productContainer.innerHTML = `
             <header class="row_one">
-            <h2>CART (${productNumbers}) </h2>
+            <h2>CART (${productNumbers})</h2>
             </header`;
         Object.values(cartItems).map(items =>{
             productContainer.innerHTML += `
@@ -163,36 +164,75 @@ function displayCart() {
     }
 }
 
-function deleteItem() {
+// function deleteItem() {
+//     var parentElem = this.parentNode.parentNode;
+//     var tag = parentElem.querySelector("#box1").getAttribute("src").split("/").pop().split(".")[0];
+
+//     var cartItems = JSON.parse(localStorage.getItem("productsInCart"));
+//     var cartCost = parseInt(localStorage.getItem("totalCost"));
+//     console.log(cartItems[tag], cartItems[tag].inCart);
     
+//     if (cartItems[tag] && cartItems[tag].inCart === 0) {
+//         parentElem.remove();
+//         delete cartItems[tag];
+//         localStorage.setItem("productsInCart", JSON.stringify(cartItems));
+
+//         cartCost -= cartItems[tag].price * cartItems[tag].inCart;
+//         localStorage.setItem("totalCost", cartCost);
+        
+//         let productNumbers = localStorage.getItem("cartNumbers");
+//         productNumbers = 0;
+//         localStorage.setItem("cartNumbers", productNumbers);
+//         document.querySelector('#cart-count-info').textContent = productNumbers;
+//         displayCart();
+//     } else if (cartItems[tag] && cartItems[tag].inCart > 0) {
+//         cartItems[tag].inCart -= 1;
+//         localStorage.setItem("productsInCart", JSON.stringify(cartItems));
+
+//         cartCost -= cartItems[tag].price;
+//         localStorage.setItem("totalCost", cartCost);
+        
+//         let productNumbers = localStorage.getItem("cartNumbers");
+//         productNumbers = cartItems[tag].inCart;
+//         localStorage.setItem("cartNumbers", productNumbers);
+//         document.querySelector('#cart-count-info').textContent = productNumbers;
+//         displayCart();
+//     }
+// }
+
+function deleteItem() {
     var parentElem = this.parentNode.parentNode;
-    parentElem.remove();
     var tag = parentElem.querySelector("#box1").getAttribute("src").split("/").pop().split(".")[0];
 
     var cartItems = JSON.parse(localStorage.getItem("productsInCart"));
     var cartCost = parseInt(localStorage.getItem("totalCost"));
-    // var ItemsInCart = 
-
-
-    if (cartItems[tag]) {
-        cartCost -= cartItems[tag].price * cartItems[tag].inCart;
-        var incartItems = cartItems[tag].inCart;
-        incartItems = incartItems -1;
-        console.log(incartItems);
+    
+    if ((!cartItems || (cartItems && cartItems[tag] && cartItems[tag].inCart === 1))) {
+        parentElem.remove();
         delete cartItems[tag];
         localStorage.setItem("productsInCart", JSON.stringify(cartItems));
-        localStorage.setItem("totalCost", cartCost);
 
+        cartCost -= cartItems[tag].price * cartItems[tag].inCart;
+        localStorage.setItem("totalCost", cartCost);
         
         let productNumbers = localStorage.getItem("cartNumbers");
-        productNumbers = (parseInt(productNumbers));
-        productNumbers = 0; 
-
+        productNumbers = 0;
         localStorage.setItem("cartNumbers", productNumbers);
         document.querySelector('#cart-count-info').textContent = productNumbers;
+    } else if (cartItems[tag] && cartItems[tag].inCart > 1) {
+        cartItems[tag].inCart -= 1;
+        localStorage.setItem("productsInCart", JSON.stringify(cartItems));
+
+        cartCost -= cartItems[tag].price;
+        localStorage.setItem("totalCost", cartCost);
         
+        let productNumbers = localStorage.getItem("cartNumbers");
+        productNumbers = cartItems[tag].inCart;
+        localStorage.setItem("cartNumbers", productNumbers);
+        document.querySelector('#cart-count-info').textContent = productNumbers;
     }
 }
+
 
 onLoadCartNUmbers();
 displayCart();
